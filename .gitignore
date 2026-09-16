@@ -1,0 +1,14 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+*.log
+
+# Node / Expo (dashboard)
+dashboard/node_modules/
+dashboard/.expo/
+dashboard/dist/
+dashboard/web-build/
