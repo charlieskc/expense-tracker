@@ -37,4 +37,8 @@ curl -s 'http://localhost:8787/api/receipts?merchant=Kai' | head -c 400
 
 - `git grep -n DATABASE_URL` should only hit `.env.example`, README, server docs — not a real password.
 - Client code under `app/` and `lib/api.ts` must call the HTTP API only (no Neon import).
+- `@neondatabase/serverless` and `dotenv` live in **devDependencies** (server/smoke only) — not Expo client runtime deps.
+- API binds **127.0.0.1** only; 500 responses return a generic `{ error: "Internal server error" }` (details logged server-side).
+- Startup refuses `DATABASE_URL` for prod Neon `pantry-ledger` / `royal-darkness-06669792` (and its proxy host); allowlist `pantry-ledger-grok` / `noisy-wind-96288646` (URL / `NEON_PROJECT` / grok proxy host).
+- `GET /api/receipts` applies default `LIMIT 100` (query `limit` capped at 500).
 - No INSERT/UPDATE/DELETE against receipts tables in this MVP.
