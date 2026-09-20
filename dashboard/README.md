@@ -5,7 +5,7 @@ Read-only household grocery spend dashboard (Expo + TypeScript + Expo Router) ag
 ## Stack
 
 - Expo SDK 57 + Expo Router (web, iOS, Android)
-- Colocated read-only API (`server/`) using `@neondatabase/serverless`
+- Colocated read-only API (`server/`) using `@neondatabase/serverless` (devDependency; not Expo client)
 - Spend = `receipts.status = 'approved'`, metric = `actual_paid_cents`, display HK$
 
 ## Hard rules
@@ -29,7 +29,7 @@ Terminal 1 — API (required for live data):
 
 ```bash
 npm run server
-# listens on http://localhost:8787
+# listens on http://127.0.0.1:8787 (localhost only)
 ```
 
 Terminal 2 — Expo:

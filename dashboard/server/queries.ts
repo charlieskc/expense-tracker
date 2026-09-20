@@ -77,15 +77,28 @@ export async function getOverview(): Promise<OverviewResponse> {
   return { totals, byCategory, byMerchant };
 }
 
+/** Default / max page size for receipt list (prevents unbounded scans). */
+export const RECEIPT_LIST_DEFAULT_LIMIT = 100;
+export const RECEIPT_LIST_MAX_LIMIT = 500;
+
+function clampReceiptLimit(raw?: number): number {
+  if (raw == null || !Number.isFinite(raw)) return RECEIPT_LIST_DEFAULT_LIMIT;
+  const n = Math.trunc(raw);
+  if (n < 1) return RECEIPT_LIST_DEFAULT_LIMIT;
+  return Math.min(n, RECEIPT_LIST_MAX_LIMIT);
+}
+
 export async function listReceipts(opts: {
   merchant?: string;
   from?: string;
   to?: string;
+  limit?: number;
 }): Promise<ReceiptListItem[]> {
   const sql = getSql();
   const merchant = opts.merchant?.trim() || null;
   const from = opts.from || null;
   const to = opts.to || null;
+  const limit = clampReceiptLimit(opts.limit);
 
   const rows = await sql`
     SELECT
@@ -105,6 +118,7 @@ export async function listReceipts(opts: {
       AND (${from}::date IS NULL OR r.receipt_date >= ${from}::date)
       AND (${to}::date IS NULL OR r.receipt_date <= ${to}::date)
     ORDER BY r.receipt_date DESC NULLS LAST, r.merchant ASC
+    LIMIT ${limit}
   `;
 
   return rows.map((row) => ({

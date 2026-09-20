@@ -5,6 +5,7 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { neon } from '@neondatabase/serverless';
+import { assertAllowedDatabaseUrl } from '../server/db';
 
 config({ path: resolve(__dirname, '../.env') });
 
@@ -15,6 +16,7 @@ async function main() {
     process.exit(0);
   }
 
+  assertAllowedDatabaseUrl(url);
   const sql = neon(url);
   console.log('Smoke against grok_pantry (approved only)…');
 
